@@ -35,7 +35,7 @@ module htlc::htlc_tests {
             coin::mint_for_testing<SUI>(10_000_000_000, scenario.ctx());
         // #boilerplate_init: end
         
-        htlc::create_lock_object(
+        htlc::createLock(
             &clock_the, 3_600_000, copy hashed, ADDR_TARGET, 
             ADDR_REFUND, coin_the, 32, scenario.ctx()
         );
@@ -78,7 +78,7 @@ module htlc::htlc_tests {
         // #boilerplate_init: end
         
         // let coin_id = object::id<Coin<SUI>>(&coin_the);
-        htlc::create_lock_object(
+        htlc::createLock(
             &clock_the, 3_600_000, copy hashed, ADDR_TARGET, ADDR_REFUND, coin_the, 32, scenario.ctx()
         );
 
