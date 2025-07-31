@@ -94,10 +94,10 @@ module htlc::htlc {
 
     /// Creates a new hash time lock.
     /// Doesn't `assert` hash length since it should be done by the counterparty anyway.
-    public fun create_lock_object<T>(
+    public fun createLock<T>(
         clock: &Clock,
-        dur: u64,
-        hashed: vector<u8>, target: address, refund: address, amount: Coin<T>,
+        durationMillis: u64,
+        hashedSecret: vector<u8>, targetAddress: address, refund: address, amount: Coin<T>,
         secret_length: u8,
         ctx: &mut TxContext
     ) {
@@ -105,10 +105,10 @@ module htlc::htlc {
         let lock = LockObject{
             id: object::new(ctx),
             created_at: timestamp, 
-            deadline: timestamp + dur,
-            hashed, 
+            deadline: timestamp + durationMillis,
+            hashed: hashedSecret, 
             refund_adr: refund,
-            target_adr: target,
+            target_adr: targetAddress,
             initiator: ctx.sender(),
             coin: amount,
             secret_length
@@ -119,49 +119,49 @@ module htlc::htlc {
             hash: lock.hashed,
             coin: sui::object::id(&lock.coin),
             refund_adr: refund,
-            target_adr: target,
+            target_adr: targetAddress,
             initiator: lock.initiator,
             deadline: lock.deadline,
-            duration: dur,
+            duration: durationMillis,
             secret_length
         });
         transfer::share_object(lock);
     }
     /// `create_lock_object` which defaults to 48 hours
-    public fun create_lock_object_48<T>(
+    public fun createLock_48<T>(
         clock: &Clock,
-        hashed: vector<u8>, target: address, refund: address, amount: Coin<T>,
+        hashedSecret: vector<u8>, targetAddress: address, refund: address, amount: Coin<T>,
         secret_length: u8,
         ctx: &mut TxContext
     ) {
-        create_lock_object(
+        createLock(
             clock, 
             172800000,
-            hashed, target, refund, amount, secret_length, ctx
+            hashedSecret, targetAddress, refund, amount, secret_length, ctx
         );
     }
     /// `create_lock_object` which defaults to 24 hours; useful for answering to another lock
-    public fun create_lock_object_24<T>(
+    public fun createLock_24<T>(
         clock: &Clock,
-        hashed: vector<u8>, target: address, refund: address, amount: Coin<T>,
+        hashedSecret: vector<u8>, targetAddress: address, refund: address, amount: Coin<T>,
         secret_length: u8,
         ctx: &mut TxContext
     ) {
-        create_lock_object(
+        createLock(
             clock, 
             86400000,
-            hashed, target, refund, amount, secret_length, ctx
+            hashedSecret, targetAddress, refund, amount, secret_length, ctx
         );
     }
 
     /// Redeems the lock. Requires only knowledge of the secret (not restricted to a calling address).
-    public fun redeem<T>(lock: LockObject<T>, secret: vector<u8>, ctx: &mut TxContext) {
-        assert!(lock.secret_length as u64 == secret.length(), ESecretLengthWrong); 
-        assert!(&hash::sha2_256(secret) == &lock.hashed, ESecretPreimageWrong);
+    public fun redeem<T>(lock: LockObject<T>, revealedSecret: vector<u8>, ctx: &mut TxContext) {
+        assert!(lock.secret_length as u64 == revealedSecret.length(), ESecretLengthWrong); 
+        assert!(&hash::sha2_256(revealedSecret) == &lock.hashed, ESecretPreimageWrong);
         
         event::emit(LockClaimedEvent{
             lock: sui::object::id(&lock),
-            secret: secret,
+            secret: revealedSecret,
             claimer: ctx.sender()
         });
         let LockObject{id, coin, target_adr, ..} = lock;

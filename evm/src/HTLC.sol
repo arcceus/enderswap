@@ -5,12 +5,12 @@ contract HTLC {
     event EVMDepositLocked(
         bytes32 indexed lockId,
         address indexed depositor,
-        address indexed recipient,
+        address indexed targetAddress,
         uint256 amount,
-        bytes32 secretHash,
+        bytes32 hashedSecret,
         uint256 timelock
     );
-    event EVMClaimed(bytes32 indexed lockId, bytes32 secret);
+    event EVMClaimed(bytes32 indexed lockId, bytes32 revealedSecret);
     event EVMRefunded(bytes32 indexed lockId);
 
     struct Lock {
@@ -25,21 +25,21 @@ contract HTLC {
 
     mapping(bytes32 => Lock) public locks;
 
-    function deposit(
+    function createLock(
         bytes32 lockId,
-        address recipient,
-        bytes32 secretHash,
-        uint256 timelock
+        address targetAddress,
+        bytes32 hashedSecret,
+        uint256 durationSeconds
     ) public payable {
         require(msg.value > 0, "Amount must be greater than 0");
         require(locks[lockId].depositor == address(0), "LockId already exists");
 
         locks[lockId] = Lock({
             depositor: msg.sender,
-            recipient: recipient,
+            recipient: targetAddress,
             amount: msg.value,
-            secretHash: secretHash,
-            timelock: block.timestamp + timelock,
+            secretHash: hashedSecret,
+            timelock: block.timestamp + durationSeconds,
             claimed: false,
             refunded: false
         });
@@ -47,21 +47,21 @@ contract HTLC {
         emit EVMDepositLocked(
             lockId,
             msg.sender,
-            recipient,
+            targetAddress,
             msg.value,
-            secretHash,
-            block.timestamp + timelock
+            hashedSecret,
+            block.timestamp + durationSeconds
         );
     }
 
-    function withdraw(bytes32 lockId, bytes32 secret) public {
+    function redeem(bytes32 lockId, bytes32 revealedSecret) public {
         Lock storage lock_ = locks[lockId];
         require(lock_.recipient == msg.sender, "Not the recipient");
         require(!lock_.claimed, "Already claimed");
         require(!lock_.refunded, "Already refunded");
         require(lock_.timelock > block.timestamp, "Timelock expired");
         require(
-            lock_.secretHash == keccak256(abi.encodePacked(secret)),
+            lock_.secretHash == sha256(abi.encodePacked(revealedSecret)),
             "Invalid secret"
         );
 
@@ -69,7 +69,7 @@ contract HTLC {
         (bool sent, ) = msg.sender.call{value: lock_.amount}("");
         require(sent, "Failed to send Ether");
 
-        emit EVMClaimed(lockId, secret);
+        emit EVMClaimed(lockId, revealedSecret);
     }
 
     function refund(bytes32 lockId) public {
