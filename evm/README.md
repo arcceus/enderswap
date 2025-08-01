@@ -1,6 +1,6 @@
 # Hashed Timelock Contract (HTLC) for Cross-Chain Swaps
 
-This project provides a Hashed Timelock Contract (HTLC) implemented in Solidity for the Ethereum Virtual Machine (EVM). It is designed to facilitate trustless, cross-chain atomic swaps, specifically for transferring native ETH from an EVM-compatible chain (like Base Sepolia) to a non-EVM chain (like Sui).
+A very simple Hashed Timelock Contract (HTLC) implemented in Solidity.
 
 ## Overview
 

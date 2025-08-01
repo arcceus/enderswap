@@ -20,7 +20,7 @@ The typical flow for an atomic swap involves two parties creating HTLCs on two d
     *   The `Coin<T>` to be locked (`amount`).
     *   The length of the secret (`secret_length`).
 
-    The contract offers `create_lock_object_24` and `create_lock_object_48` as helpers for 24-hour and 48-hour lock times. Upon creation, a `NewLockEvent` is emitted.
+    The contract offers `createLock_24` and `createLock_48` as helpers for 24-hour and 48-hour lock times. Upon creation, a `NewLockEvent` is emitted.
 
 2.  **Redemption**: The counterparty, who knows the secret, can redeem the locked `Coin` by calling the `redeem` function with the correct secret (`secret`). The contract verifies the secret against the stored hash. If they match, the `Coin` is transferred to the `target_adr`. A `LockClaimedEvent` is emitted.
 
