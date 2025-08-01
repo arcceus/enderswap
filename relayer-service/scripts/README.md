@@ -64,22 +64,6 @@ Or run with custom amounts:
 MAKER_AMOUNT=0.005 TAKER_AMOUNT=50000000 pnpm demo
 ```
 
-## Architecture
-
-```
-scripts/
-├── demo.ts                 # Main demo orchestrator
-├── lib/
-│   ├── blockchain/
-│   │   ├── common.ts       # Shared utilities (secret generation, hashing)
-│   │   ├── evm.ts         # EVM HTLC service
-│   │   └── sui.ts         # Sui HTLC service
-│   ├── config/
-│   │   └── index.ts       # Configuration and environment loading
-│   └── swapOrchestrator.ts # Main swap flow orchestration
-└── types/
-    └── order.ts           # TypeScript interfaces
-```
 
 ## Key Components
 
@@ -137,7 +121,4 @@ To extend or modify the demo:
 2. **Support New Chains**: Create new service classes in `lib/blockchain/`
 3. **Custom Logic**: Modify individual service methods
 4. **Error Handling**: Enhance error scenarios in orchestrator
-
-## License
-
-This demo is part of the EnderSwap project for educational and demonstration purposes. 
+ 

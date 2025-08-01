@@ -9,7 +9,7 @@ out/
 
 # Docs
 docs/
-node_modules/
+relayer-service/node_modules/
 
 # Dotenv file
 .env
