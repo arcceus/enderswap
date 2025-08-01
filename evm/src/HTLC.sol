@@ -16,6 +16,7 @@ contract HTLC {
     struct Lock {
         address depositor;
         address recipient;
+        address targetAddress;
         uint256 amount;
         bytes32 secretHash;
         uint256 timelock;
@@ -37,6 +38,7 @@ contract HTLC {
         locks[lockId] = Lock({
             depositor: msg.sender,
             recipient: targetAddress,
+            targetAddress: targetAddress,
             amount: msg.value,
             secretHash: hashedSecret,
             timelock: block.timestamp + durationSeconds,

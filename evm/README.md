@@ -24,7 +24,7 @@ This is the main smart contract file containing the logic for the HTLC.
     -   `depositor`: The address of the user who deposited the ETH.
     -   `recipient`: The address of the user who can claim the ETH.
     -   `amount`: The amount of ETH locked.
-    -   `secretHash`: The Keccak256 hash of the secret required to unlock the funds.
+    -   `secretHash`: The SHA256 hash of the secret required to unlock the funds.
     -   `timelock`: The Unix timestamp after which the depositor can claim a refund.
     -   `claimed`: A boolean flag indicating whether the funds have been withdrawn.
     -   `refunded`: A boolean flag indicating whether the funds have been refunded.
@@ -36,7 +36,7 @@ This is the main smart contract file containing the logic for the HTLC.
     -   **Parameters:**
         -   `lockId`: A unique `bytes32` identifier for the lock.
         -   `recipient`: The address that is authorized to withdraw the funds.
-        -   `secretHash`: The Keccak256 hash of the secret.
+        -   `secretHash`: The SHA256 hash of the secret.
         -   `timelock`: The duration (in seconds) for which the funds will be locked.
     -   The amount of ETH to be deposited is sent as `msg.value`.
 

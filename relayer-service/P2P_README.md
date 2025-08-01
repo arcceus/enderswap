@@ -108,7 +108,7 @@ This flow assumes a centralized "order book" or matching service, managed by the
 3.  **User 2 (Counterparty) Accepts Offer:**
     *   User 2 browses available offers on the relayer service.
     *   User 2 selects User 1's offer and signals acceptance to the relayer service.
-    *   The relayer service then relays the hash `H` to User 2.
+    *   The relayer service then relays the hash `H` to User 2 and the target address.
 
 4.  **User 1 Locks Funds on Chain 1:**
     *   User 1 calls the appropriate `createLock` (EVM) or `createLock` (Sui) function on the Chain 1 HTLC contract.
@@ -116,7 +116,7 @@ This flow assumes a centralized "order book" or matching service, managed by the
     *   They use the agreed-upon `H` and a `durationSeconds` (EVM) or `durationMillis` (Sui) suitable for their role (longer timelock for the initiator).
 
 5.  **Relayer Service Monitors and Notifies User 2:**
-    *   The relayer service monitors Chain 1 for User 1's lock event (e.g., `EVMDepositLocked` or `NewLockEvent`).
+    *   The relayer service monitors Chain 1 for User 1's lock event (e.g., `EVMDepositLocked` or `NewLockEvent`). How?
     *   Once confirmed, it notifies User 2 that User 1 has successfully locked their funds.
 
 6.  **User 2 Locks Funds on Chain 2:**

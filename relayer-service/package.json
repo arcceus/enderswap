@@ -1,0 +1,17 @@
+{
+	"dependencies": {
+		"@mysten/sui": "^1.0.3",
+		"ethers": "^6.15.0"
+	},
+	"scripts": {
+		"demo": "ts-node scripts/demo.ts",
+		"sui-key": "ts-node scripts/generateSuiKey.ts",
+		"debug-sui": "ts-node scripts/debugSuiWallet.ts"
+	},
+	"devDependencies": {
+		"@types/node": "^24.1.0",
+		"dotenv": "^16.4.5",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.3.3"
+	}
+}
