@@ -5,6 +5,11 @@
 	},
 	"scripts": {
 		"demo": "ts-node scripts/demo.ts",
+		"setup": "ts-node scripts/setup-and-verify.ts",
+		"evm-to-sui": "ts-node scripts/evm-to-sui-swap.ts",
+		"sui-to-evm": "ts-node scripts/sui-to-evm-swap.ts",
+		"timelock-demo": "ts-node scripts/timelock-expiry-demo.ts",
+		"all-demos": "ts-node scripts/run-all-demos.ts",
 		"sui-key": "ts-node scripts/generateSuiKey.ts",
 		"debug-sui": "ts-node scripts/debugSuiWallet.ts"
 	},

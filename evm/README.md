@@ -1,4 +1,4 @@
-# Hashed Timelock Contract (HTLC) for Cross-Chain Swaps
+# Hashed Timelock Contract (HTLC)
 
 A very simple Hashed Timelock Contract (HTLC) implemented in Solidity.
 

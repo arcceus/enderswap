@@ -1,21 +1,3 @@
-/// Module: htlc
-/// HTLC implementation compatible with <https://github.com/decred/atomicswap> hence with many more projects which conform to it. 
-/// Basically this enables [Decred Atomic Swaps](https://docs.decred.org/advanced/atomic-swap/) for any `Coin` on Sui 
-/// (with addresses not on deny-list) if somebody would want to implement that.
-/// 
-/// WARNING: It's not possible to check if the hash time locked `Coin` is regulated or its metadata can be altered during the lock-time, 
-/// *so it's duty of the downstream off-chain to check* that the `Coin` isn't regulated, frozen, or if the user takes those 
-/// risk participating in the deal. *Note, that's equaly important at the audit phase of the protocol.*
-/// 
-/// During auditing phase a lot of things should be checked: starting from correct assets, amounts, and addresses, 
-/// to the fact that counterparty code will actually hash to the agreed value, since there's a risk of a situation when correct 
-/// hashed value is asserted with a different algorithm/settings which leads to exposure of the _secret_ via "mempool" without 
-/// ability to redeem the asset leaving it to be refunded by the counterparty.
-/// 
-/// # tests
-/// After adding some test code it became clear to me that proper tests for this should involve node RPC calls due to the nature of 
-/// the protocol. Hence presented tests are somewhat superficial; and still they're divided in two modules: 
-/// one adapts test from an Ethereum project and another checks error handling introduced here.
 module htlc::htlc {
     use std::hash;
 
@@ -29,13 +11,7 @@ module htlc::htlc {
     const ERefund3rdParty: u64 = 3;
     const ERefundEarly: u64 = 4;
 
-    // `Coin` is essential here a) to be able to transfer it to user accounts, and b) to be able communicate what kind of asset was indeed locked
-    // `Balance` won't be inspectable via a RPC in the same way.
     #[allow(lint(coin_field))] 
-    // Representation of the hash time lock itself.
-    // how to prevent from burning the lock (so that refund won't be possible)? should it be shared?
-    /*      design decision: it can be either shared or object-owned (by the module itself); the later entites `store` and everything it needs (incl. fees), 
-    the former requires sequencing, *but* the wrapped `Coin` do requires that anyway, so this requirements comes for free */
     public struct LockObject<phantom T> has key { // should not have `store` to pin it to the addressant
         id: UID,
         /// timestamp of the instance creation
