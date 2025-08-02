@@ -53,11 +53,6 @@ export class SwapOrchestrator {
     console.log('🚀 DEMO 1: EVM to SUI Atomic Swap (ETH → SUI)');
     console.log('='.repeat(60));
 
-    // Debug logging
-    console.log('\n🐛 DEBUG: demonstrateEVMToSUI received parameters:');
-    console.log(`   makerAmount: "${makerAmount}" (type: ${typeof makerAmount})`);
-    console.log(`   takerAmount: "${takerAmount}" (type: ${typeof takerAmount})`);
-
     // For demo, use same wallet addresses if destinations not provided
     const makerSuiDestination = makerDestinationSuiAddress || this.suiService.walletAddress;
     const takerEthDestination = takerDestinationEthAddress || this.evmService.walletAddress;
@@ -84,7 +79,6 @@ export class SwapOrchestrator {
 
     // Step 3: Maker locks ETH (48h timelock)
     console.log('\n⏰ Step 1: Maker locks ETH on Base Sepolia (48h timelock)');
-    console.log(`🐛 DEBUG: About to create EVM lock with amount: "${makerAmount}" (type: ${typeof makerAmount})`);
     const evmTxHash = await this.evmService.createLock({
       lockId,
       recipient: takerEthDestination, // Taker's ETH destination address
@@ -95,7 +89,6 @@ export class SwapOrchestrator {
 
     // Step 4: Taker locks SUI (24h timelock)
     console.log('\n⏰ Step 2: Taker locks SUI on Sui Testnet (24h timelock)');
-    console.log(`🐛 DEBUG: About to create SUI lock with amount: "${takerAmount}" (type: ${typeof takerAmount})`);
     const suiLockId = await this.suiService.createLock({
       duration: TIMELOCK_DURATIONS.TAKER,
       secretHash,
@@ -112,7 +105,6 @@ export class SwapOrchestrator {
     // Step 5: Maker claims SUI (reveals secret)
     console.log('\n🎯 Step 3: Maker claims SUI (revealing secret)');
     console.log(`   Secret: ${formatSecretForDisplay(secret)}`);
-    console.log(`🐛 DEBUG: About to redeem SUI lock object: ${suiLockId}`);
     const suiClaimTx = await this.suiService.redeem(suiLockId, secret);
 
     // Step 6: Taker claims ETH (using revealed secret)
@@ -170,7 +162,6 @@ export class SwapOrchestrator {
 
     // Step 3: Maker locks SUI (48h timelock)
     console.log('\n⏰ Step 1: Maker locks SUI on Sui Testnet (48h timelock)');
-    console.log(`🐛 DEBUG: About to create SUI lock with amount: "${makerAmount}" (type: ${typeof makerAmount})`);
     const suiLockId = await this.suiService.createLock({
       duration: TIMELOCK_DURATIONS.MAKER,
       secretHash,
@@ -262,17 +253,8 @@ export class SwapOrchestrator {
     console.log('\n🎬 Starting EnderSwap HTLC Atomic Swap Demo');
     console.log('==================================================');
     
-    // Debug logging
-    console.log('\n🐛 DEBUG: runFullDemo received config:');
-    console.log(`   config.makerAmount: "${config.makerAmount}" (type: ${typeof config.makerAmount})`);
-    console.log(`   config.takerAmount: "${config.takerAmount}" (type: ${typeof config.takerAmount})`);
-    
     try {
       // Demo 1: EVM to SUI
-      console.log('\n🐛 DEBUG: About to call demonstrateEVMToSUI with:');
-      console.log(`   makerAmount: "${config.makerAmount}"`);
-      console.log(`   takerAmount: "${config.takerAmount}"`);
-      
       await this.demonstrateEVMToSUI(
         config.makerAmount, 
         config.takerAmount,

@@ -54,16 +54,82 @@ This demo showcases atomic swaps between Base Sepolia (EVM) and Sui Testnet usin
 
 ## Usage
 
-Run the complete demo:
+### Run Individual Scripts via pnpm (Recommended)
+
+1. **Setup and Verification Only**:
+   ```bash
+   pnpm setup
+   ```
+
+2. **EVM to SUI Swap Demo**:
+   ```bash
+   pnpm evm-to-sui
+   ```
+
+3. **SUI to EVM Swap Demo**:
+   ```bash
+   pnpm sui-to-evm
+   ```
+
+4. **Timelock Expiry & Refund Demo**:
+   ```bash
+   pnpm timelock-demo
+   ```
+
+5. **Run All Demos (Replaces Original Demo)**:
+   ```bash
+   pnpm all-demos
+   ```
+
+6. **Original Demo Script**:
+   ```bash
+   pnpm demo
+   ```
+
+### Run with Custom Amounts
+
+You can override the default amounts for any script:
 ```bash
-pnpm demo
+MAKER_AMOUNT=0.005 TAKER_AMOUNT=50000000 pnpm evm-to-sui
 ```
 
-Or run with custom amounts:
+### Alternative: Direct ts-node execution
+
+If you prefer to run directly:
 ```bash
-MAKER_AMOUNT=0.005 TAKER_AMOUNT=50000000 pnpm demo
+npx ts-node scripts/setup-and-verify.ts
+npx ts-node scripts/evm-to-sui-swap.ts
+# etc...
 ```
 
+
+## Available Scripts
+
+### `setup-and-verify.ts`
+- Loads configuration and initializes blockchain services
+- Verifies HTLC contracts are accessible on both chains
+- Checks wallet balances and provides warnings if insufficient
+- Can be imported by other scripts or run standalone
+
+### `evm-to-sui-swap.ts`
+- Demonstrates ETH → SUI atomic swap
+- Includes setup verification, then runs the complete swap flow
+- Shows maker locking ETH, taker locking SUI, claims, and final balances
+
+### `sui-to-evm-swap.ts`
+- Demonstrates SUI → ETH atomic swap
+- Includes setup verification, then runs the complete swap flow
+- Shows maker locking SUI, taker locking ETH, claims, and final balances
+
+### `timelock-expiry-demo.ts`
+- Demonstrates error handling for timelock expiry
+- Creates a short-lived lock and shows refund after expiry
+- Useful for testing refund mechanisms
+
+### `run-all-demos.ts`
+- Runs all three demos in sequence (equivalent to original demo.ts)
+- Includes 5-second pauses between demos
+- Comprehensive demonstration of all features
 
 ## Key Components
 
